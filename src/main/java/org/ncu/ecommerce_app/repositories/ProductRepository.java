@@ -2,57 +2,58 @@ package org.ncu.ecommerce_app.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ncu.ecommerce_app.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository {
-	List<Product> products = new ArrayList<Product>();
+	private static List<Product> products = new ArrayList<Product>();
 
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-
-
-@Autowired
-	public ProductRepository(JdbcTemplate jdbcTemplate) {
-
-	this.jdbcTemplate=jdbcTemplate;
-
-		products.add(new Product(101, "Smart phones", "smart phones - of diff brands", true, 10000.00));
-		products.add(new Product(102, "Shoes", "shoes of diff brands", false, 50000.00));
-		products.add(new Product(104, "Clothes", "clothes of diff brands", true, 100000.00));
-		products.add(new Product(105, "Smart watch", "smart watches - of diff brands", true, 18000.00));
-		products.add(new Product(106, "Smart television", "smart tv - of diff brands", false, 5000.00));
-		products.add(new Product(108, "Smart speakers", "smart speakers - of diff brands", true, 15600.00));
-	}
-	
+	// Add a new product to the database
 	public void addProduct(Product product) {
-		// write logic to add a new product object
-		products.add(product);
+		String queryString = "insert into product values (?,?,?,?,?)";
+		Object[] argsObject = {
+				product.getProductID(),
+				product.getProductName(),
+				product.getProductDesc(),
+				product.isAvailable(),
+				product.getProductPrice()
+		};
+		jdbcTemplate.update(queryString, argsObject);
 	}
-	
-	public List<Product> getAllProducts(){
+
+	// Get all products (example placeholder - typically this should fetch from DB)
+	public List<Product> getAllProducts() {
 		return products;
 	}
-	public Product updateProduct(int id, Product product) {
-		// write logic to update an existing product
-		return null;
+
+	// Update an existing product in the database
+	public void updateProduct(Product product) {
+		String queryString = "UPDATE product SET productName = ?, productDesc = ?, available = ?, productPrice = ? WHERE productID = ?";
+		Object[] argsObject = {
+				product.getProductName(),
+				product.getProductDesc(),
+				product.isAvailable(),
+				product.getProductPrice(),
+				product.getProductID()
+		};
+		jdbcTemplate.update(queryString, argsObject);
 	}
 
+	// Delete an existing product by its ID
 	public boolean deleteProduct(int id) {
-		// write the logic to delete an existing product by id
 		boolean isDeleted = false;
-		for(Product product : products){
-			if (product.getProductID()==id){
+		for (Product product : products) {
+			if (product.getProductID() == id) {
 				isDeleted = products.remove(product);
+				break;
 			}
 		}
-		System.out.println("updated list;"+products);
 		return isDeleted;
 	}
-
- }
+}

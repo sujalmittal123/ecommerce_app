@@ -11,23 +11,33 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/ecommerce-app")
 public class ProductController {
-	@Autowired 
+	@Autowired
 	private ProductService productService;
-	
+
+	// Get all products sorted by their IDs
 	@GetMapping(value = "/products")
-	public List<Product> fetchProducts(){
+	public List<Product> fetchProducts() {
 		return productService.getSoretedProducts();
 	}
 
+	// Save a new product
 	@PostMapping(value = "/save")
-	public String saveproduct(@RequestBody Product product) {
-		productService.insertProduct(null);
-		return "Product saved sucessfully";
-
+	public String saveProduct(@RequestBody Product product) {
+		productService.insertProduct(product);
+		return "Product saved successfully";
 	}
+
+	// Update an existing product
+	@PutMapping(value = "/update/{id}")
+	public String updateProduct(@PathVariable int id, @RequestBody Product product) {
+		productService.updateProductById(id, product);
+		return "Product updated successfully";
+	}
+
+	// Delete a product by ID
 	@DeleteMapping(value = "/delete/{id}")
-	public String delteProduct(@PathVariable int id){
+	public String deleteProduct(@PathVariable int id) {
 		productService.deleteProductByid(id);
-		return "product deleted sucessfulley";
-    }
+		return "Product deleted successfully";
+	}
 }
