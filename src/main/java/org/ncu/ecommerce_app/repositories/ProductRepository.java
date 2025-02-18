@@ -4,13 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ncu.ecommerce_app.entities.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository {
 	List<Product> products = new ArrayList<Product>();
-	
-	public ProductRepository() {
+
+	private JdbcTemplate jdbcTemplate;
+
+
+
+@Autowired
+	public ProductRepository(JdbcTemplate jdbcTemplate) {
+
+	this.jdbcTemplate=jdbcTemplate;
+
 		products.add(new Product(101, "Smart phones", "smart phones - of diff brands", true, 10000.00));
 		products.add(new Product(102, "Shoes", "shoes of diff brands", false, 50000.00));
 		products.add(new Product(104, "Clothes", "clothes of diff brands", true, 100000.00));
@@ -27,7 +38,6 @@ public class ProductRepository {
 	public List<Product> getAllProducts(){
 		return products;
 	}
-	
 	public Product updateProduct(int id, Product product) {
 		// write logic to update an existing product
 		return null;
